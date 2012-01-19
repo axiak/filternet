@@ -28,13 +28,13 @@ class CustomProxyClient(proxy.ProxyClient):
             'application/xhtml+xml',
             )
 
-    def handleResponsePart(self, buffer):
+    def ahandleResponsePart(self, buffer):
         if self.isHtml():
             self.res_buffer.append(buffer)
         else:
             return proxy.ProxyClient.handleResponsePart(self, buffer)
 
-    def handleResponseEnd(self):
+    def ahandleResponseEnd(self):
         if not self.isHtml():
             return proxy.ProxyClient.handleResponseEnd(self)
         result = self.transform_content(''.join(self.res_buffer))
