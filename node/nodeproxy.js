@@ -5,6 +5,10 @@ var ADDITIONAL_CODE = "<script type='text/javascript' src='http://ajax.googleapi
                       "<script type='text/javascript' src='http://cdnjs.cloudflare.com/ajax/libs/require.js/1.0.1/require.min.js'></script>" +
                       "<script type='text/javascript' src='http://axiak.github.com/injectfun/index.js'></script>";
 
+var PORT = process.env.PORT || 8000;
+
+console.log("Proxy listening on port " + PORT);
+
 function fixHeaders(oldHeaders) {
   // node does something STUPID in that incoming headers will be all lowercased
   // but outgoing headers will not have their case affected so I have to fix
@@ -33,8 +37,6 @@ http.createServer(function(request, response) {
   delete request.headers['proxy-connection'];
 
   var proxy = http.createClient(80, request.headers['host']);
-
-  console.log(fixHeaders(request.headers));
 
   var proxy_request = proxy.request(request.method, request.url, fixHeaders(request.headers));
 
@@ -77,4 +79,4 @@ http.createServer(function(request, response) {
   request.addListener('end', function() {
     proxy_request.end();
   });
-}).listen(8000);
+}).listen(process.env.PORT || 8000);
