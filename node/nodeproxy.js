@@ -15,10 +15,10 @@ function fixHeaders(request, oldHeaders) {
   // hash has the proper case. This will not work for the "TE" header, see
   // http://en.wikipedia.org/wiki/List_of_HTTP_header_fields
   var result = {};
-  if (result['x-forwarded-for']) {
-    result['x-forwarded-for'] = result['x-forwarded-for'] + ',' + (request.connection.remoteAddress || request.connection.socket.remoteAddress);
+  if (oldHeaders['x-forwarded-for']) {
+    oldHeaders['x-forwarded-for'] = result['x-forwarded-for'] + ',' + (request.connection.remoteAddress || request.connection.socket.remoteAddress);
   } else {
-    result['x-forwarded-for'] = request.connection.remoteAddress || request.connection.socket.remoteAddress;
+    oldHeaders['x-forwarded-for'] = request.connection.remoteAddress || request.connection.socket.remoteAddress;
   }
 
   for (var header in oldHeaders) {
