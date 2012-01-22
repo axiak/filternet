@@ -7,7 +7,7 @@ var ADDITIONAL_CODE = "<script type='text/javascript' src='http://ajax.googleapi
 
 var PORT = process.env.PORT || 8000;
 
-function fixHeaders(oldHeaders) {
+function fixHeaders(request, oldHeaders) {
   // node does something STUPID in that incoming headers will be all lowercased
   // but outgoing headers will not have their case affected so I have to fix
   // them here.
@@ -15,6 +15,12 @@ function fixHeaders(oldHeaders) {
   // hash has the proper case. This will not work for the "TE" header, see
   // http://en.wikipedia.org/wiki/List_of_HTTP_header_fields
   var result = {};
+  if (result['x-forwarded-for']) {
+    result['x-forwarded-for'] = result['x-forwarded-for'] + ',' + (request.connection.remoteAddress || request.connection.socket.remoteAddress);
+  } else {
+    result['x-forwarded-for'] = request.connection.remoteAddress || request.connection.socket.remoteAddress;
+  }
+
   for (var header in oldHeaders) {
     if (oldHeaders.hasOwnProperty(header)) {(function(){
       header = header.split('-')
@@ -75,7 +81,7 @@ var server = http.createServer(catch_errors(function(request, response) {
   , 'port': ~~(parsed_url.port || 80)
   , 'path': parsed_url.pathname + (parsed_url.search || '') + (parsed_url.hash || '')
   , 'method': request.method
-  , 'headers': fixHeaders(request.headers)
+  , 'headers': fixHeaders(request, request.headers)
   };
 
   debug_view(request_info);
