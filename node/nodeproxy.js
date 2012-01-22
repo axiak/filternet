@@ -1,13 +1,11 @@
-var http = require('http');
-
+var http = require('http')
+  , url = require('url');
 var ADDITIONAL_CODE = "<script type='text/javascript' src='http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js'></script>" +
                       "<script type='text/javascript'>$.noConflict();</script>" +
                       "<script type='text/javascript' src='http://cdnjs.cloudflare.com/ajax/libs/require.js/1.0.1/require.min.js'></script>" +
                       "<script type='text/javascript' src='http://axiak.github.com/injectfun/index.js'></script>";
 
 var PORT = process.env.PORT || 8000;
-
-console.log("Proxy listening on port " + PORT);
 
 function fixHeaders(oldHeaders) {
   // node does something STUPID in that incoming headers will be all lowercased
@@ -19,9 +17,6 @@ function fixHeaders(oldHeaders) {
   var result = {};
   for (var header in oldHeaders) {
     if (oldHeaders.hasOwnProperty(header)) {(function(){
-      // this is jslint's idea of "code style" ^ ^ ^
-      // (personally, I think this entire function is full of fail. thanks,
-      // node. thanks, jslint.)
       header = header.split('-')
                      .map(function(header){ return header[0].toUpperCase()+header.slice(1); })
                      .join('-');
@@ -31,26 +26,71 @@ function fixHeaders(oldHeaders) {
   return result;
 }
 
-http.createServer(function(request, response) {
-//  request.headers['accept-encoding'] = 'identity';
+var catch_errors = function (wrapped) {
+    return function (request, response) {
+        try {
+            return wrapped(request, response);
+        } catch (error) {
+            console.log("CAUGHT");
+            console.log(error);
+            console.log(error.stack);
+        }
+    };
+};
+
+var unrecoverable_error = function (request, response) {
+    return function (error) {
+        console.log('------------------------------------------------');
+        console.log("Unrecoverable error: " + error);
+        console.log("URL: " + request.method + " " + request.url);
+        console.log(error.stack);
+        response.writeHead(404, {'X-Failure': ""+error});
+        response.end('');
+    };
+};
+
+
+var debug_view = function (request_info) {
+    if (process.env.DEBUG) {
+        var r = {};
+        r['host'] = request_info['host'];
+        r['port'] = request_info['port'];
+        r['path'] = request_info['path'];
+        r['method'] = request_info['method'];
+
+        console.log(r);
+    }
+};
+
+
+var server = http.createServer(catch_errors(function(request, response) {
+  request.headers['accept-encoding'] = 'identity';
   delete request.headers['accept-encoding'];
   delete request.headers['proxy-connection'];
 
-  var proxy = http.createClient(80, request.headers['host']);
+  var parsed_url = url.parse(request.url);
 
-  var proxy_request = proxy.request(request.method, request.url, fixHeaders(request.headers));
+  var request_info = {
+    'host': parsed_url.hostname
+  , 'port': ~~(parsed_url.port || 80)
+  , 'path': parsed_url.pathname + (parsed_url.search || '') + (parsed_url.hash || '')
+  , 'method': request.method
+  , 'headers': fixHeaders(request.headers)
+  };
 
-  proxy_request.addListener('response', function (proxy_response) {
+  debug_view(request_info);
+
+  var proxy_request = http.request(request_info, function (proxy_response) {
     var isHtml = (proxy_response.headers['content-type'] &&
                   proxy_response.headers['content-type'].toLowerCase().indexOf("html") != -1),
         buffer = "";
 
-    proxy_response.addListener('error', function (error) {
+    proxy_response.on('error', function (error) {
         console.log(error);
         console.log(error.stack);
     });
 
-    proxy_response.addListener('data', function(chunk) {
+    proxy_response.on('data', function(chunk) {
       if (isHtml) {
           buffer += chunk.toString("utf-8");
       } else {
@@ -58,7 +98,7 @@ http.createServer(function(request, response) {
       }
     });
 
-    proxy_response.addListener('end', function() {
+    proxy_response.on('end', function() {
       if (isHtml) {
           delete proxy_response.headers['content-length'];
           var originalLength = buffer.length;
@@ -71,12 +111,36 @@ http.createServer(function(request, response) {
           response.end();
       }
     });
+
+    proxy_response.on('error', unrecoverable_error(request, response));
+
     response.writeHead(proxy_response.statusCode, proxy_response.headers);
   });
-  request.addListener('data', function(chunk) {
+
+  proxy_request.on('error', unrecoverable_error(request, response));
+  request.on('error', unrecoverable_error(request, response));
+
+  request.on('data', function(chunk) {
     proxy_request.write(chunk, 'binary');
   });
-  request.addListener('end', function() {
+
+  request.on('end', function() {
     proxy_request.end();
   });
-}).listen(process.env.PORT || 8000);
+
+
+}));
+
+server.listen(PORT);
+server.on('clientError', function (error) {
+    console.log("ClientError failure.");
+    console.log(error);
+    console.log(error.stack);
+});
+server.on('error', function (error) {
+    console.log("error failure.");
+    console.log(error);
+    console.log(error.stack);
+});
+
+console.log("Proxy listening on port " + PORT);
