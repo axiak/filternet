@@ -1,5 +1,7 @@
 var http = require('http')
-  , url = require('url');
+  , url = require('url')
+  , fs = require('fs')
+  , https = require('https');
 var ADDITIONAL_CODE = "<script type='text/javascript' src='http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js'></script>" +
                       "<script type='text/javascript'>$.noConflict();</script>" +
                       "<script type='text/javascript' src='http://cdnjs.cloudflare.com/ajax/libs/require.js/1.0.1/require.min.js'></script>" +
@@ -69,7 +71,7 @@ var debug_view = function (request_info) {
 };
 
 
-var server = http.createServer(catch_errors(function(request, response) {
+var serverDefinition = function (http_mod) { return catch_errors(function(request, response) {
   request.headers['accept-encoding'] = 'identity';
   delete request.headers['accept-encoding'];
   delete request.headers['proxy-connection'];
@@ -86,7 +88,7 @@ var server = http.createServer(catch_errors(function(request, response) {
 
   debug_view(request_info);
 
-  var proxy_request = http.request(request_info, function (proxy_response) {
+  var proxy_request = http_mod.request(request_info, function (proxy_response) {
     var isHtml = (proxy_response.headers['content-type'] &&
                   proxy_response.headers['content-type'].toLowerCase().indexOf("html") != -1),
         buffer = "";
@@ -133,10 +135,10 @@ var server = http.createServer(catch_errors(function(request, response) {
   request.on('end', function() {
     proxy_request.end();
   });
+});
+};
 
-
-}));
-
+var server = http.createServer(serverDefinition(http));
 server.listen(PORT);
 server.on('clientError', function (error) {
     console.log("ClientError failure.");
@@ -149,4 +151,21 @@ server.on('error', function (error) {
     console.log(error.stack);
 });
 
-console.log("Proxy listening on port " + PORT);
+var sslOptions = {
+    key: fs.readFileSync('keys/server.key'),
+    cert: fs.readFileSync('keys/server.crt')
+};
+
+var httpsServer = https.createServer(sslOptions, serverDefinition(https));
+httpsServer.listen(PORT + 1);
+httpsServer.on('clientError', function (error) {
+    console.log("ClientError failure.");
+    console.log(error);
+    console.log(error.stack);
+});
+httpsServer.on('error', function (error) {
+    console.log("error failure.");
+    console.log(error);
+    console.log(error.stack);
+});
+console.log("Proxy listening on port " + PORT + " and port " + (PORT + 1));
