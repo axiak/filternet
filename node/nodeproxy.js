@@ -10,9 +10,9 @@ var ADDITIONAL_CODE = {
         "<script type='text/javascript' src='http://cdnjs.cloudflare.com/ajax/libs/require.js/1.0.1/require.min.js'></script>" +
         "<script type='text/javascript' src='http://axiak.github.com/injectfun/index.js'></script>",
 
-    443: "<script type='text/javascript' src='https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js'></script>" +
+    443: "<script type='text/javascript' src='http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js'></script>" +
         "<script type='text/javascript'>$.noConflict();</script>" +
-        "<script type='text/javascript' src='https://cdnjs.cloudflare.com/ajax/libs/require.js/1.0.1/require.min.js'></script>" +
+        "<script type='text/javascript' src='http://cdnjs.cloudflare.com/ajax/libs/require.js/1.0.1/require.min.js'></script>" +
         "<script type='text/javascript' src='http://axiak.github.com/injectfun/index.js'></script>"
 };
 
