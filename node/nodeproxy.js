@@ -16,7 +16,7 @@ var ADDITIONAL_CODE = {
         "<script type='text/javascript' src='http://axiak.github.com/injectfun/index.js'></script>"
 };
 
-var PORT = process.env.PORT || 8000;
+var PORT = ~~(process.env.PORT || 8000);
 
 function fixHeaders(request, oldHeaders) {
   // node does something STUPID in that incoming headers will be all lowercased
