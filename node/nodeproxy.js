@@ -87,10 +87,11 @@ var serverDefinition = function (http_mod, default_port, is_ssl) { return catch_
   delete request.headers['proxy-connection'];
 
   var parsed_url = url.parse(request.url);
+  var parsed_host = url.parse('http://' + request.headers['host']);
 
   var request_info = {
-    'host': parsed_url.hostname || url.parse('http://' + request.headers['host']).hostname
-  , 'port': ~~(parsed_url.port || default_port)
+    'host': parsed_url.hostname || parsed_host.hostname
+  , 'port': ~~(parsed_url.port || parsed_host.port || default_port)
   , 'path': parsed_url.pathname + (parsed_url.search || '') + (parsed_url.hash || '')
   , 'method': request.method
   , 'headers': fixHeaders(request, request.headers)
