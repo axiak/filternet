@@ -81,7 +81,7 @@ var debug_view = function (request_info) {
 };
 
 
-var serverDefinition = function (http_mod, default_port) { return catch_errors(function(request, response) {
+var serverDefinition = function (http_mod, default_port, is_ssl) { return catch_errors(function(request, response) {
   request.headers['accept-encoding'] = 'identity';
   delete request.headers['accept-encoding'];
   delete request.headers['proxy-connection'];
@@ -89,7 +89,7 @@ var serverDefinition = function (http_mod, default_port) { return catch_errors(f
   var parsed_url = url.parse(request.url);
 
   var request_info = {
-    'host': parsed_url.hostname || request.headers['host']
+    'host': parsed_url.hostname || url.parse('http://' + request.headers['host']).hostname
   , 'port': ~~(parsed_url.port || default_port)
   , 'path': parsed_url.pathname + (parsed_url.search || '') + (parsed_url.hash || '')
   , 'method': request.method
@@ -193,7 +193,7 @@ var sslOptions = {
     cert: fs.readFileSync('keys/server.crt')
 };
 
-var httpsServer = https.createServer(sslOptions, serverDefinition(https, 443));
+var httpsServer = https.createServer(sslOptions, serverDefinition(https, 443, true));
 httpsServer.listen(PORT + 1);
 httpsServer.on('clientError', function (error) {
     console.log("ClientError failure.");
