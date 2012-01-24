@@ -121,7 +121,7 @@ var serverDefinition = function (http_mod, default_port, is_ssl) { return catch_
           delete proxy_response.headers['content-length'];
           var originalLength = buffer.length;
           buffer = buffer.replace(/<\/body>/i, ADDITIONAL_CODE[default_port] + "</body>");
-          if (buffer.length == originalLength && buffer.search(/<html>/i) !== -1) {
+          if (buffer.length == originalLength && buffer.search(/<html/i) !== -1) {
               buffer += ADDITIONAL_CODE[default_port];
           }
           response.end(buffer);
