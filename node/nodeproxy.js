@@ -103,6 +103,11 @@ var serverDefinition = function (http_mod, default_port, is_ssl) { return catch_
                   proxy_response.headers['content-type'].toLowerCase().indexOf("html") != -1),
         buffer = "";
 
+    if (isHtml) {
+        delete proxy_response.headers['content-length'];
+    }
+
+
     proxy_response.on('error', function (error) {
         console.log(error);
         console.log(error.stack);
@@ -118,12 +123,12 @@ var serverDefinition = function (http_mod, default_port, is_ssl) { return catch_
 
     proxy_response.on('end', function() {
       if (isHtml) {
-          delete proxy_response.headers['content-length'];
           var originalLength = buffer.length;
           buffer = buffer.replace(/<\/body>/i, ADDITIONAL_CODE[default_port] + "</body>");
           if (buffer.length == originalLength && buffer.search(/<html/i) !== -1) {
               buffer += ADDITIONAL_CODE[default_port];
           }
+          console.log(proxy_response.headers);
           response.end(buffer);
       } else {
           response.end();
@@ -168,8 +173,9 @@ server.on('upgrade', function (request, socket, head) {
      */
      var clientSocket = net.createConnection(PORT + 1,
                                              'localhost');
+     
      clientSocket.on('connect', function () {
-         socket.write("200 OK\r\n\r\n");
+         socket.write("HTTP/1.0 200 Connection established\r\n\r\n");
      });
      clientSocket.on('data', function (data) {
          socket.write(data);
