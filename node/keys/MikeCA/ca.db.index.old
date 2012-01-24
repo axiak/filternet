@@ -1,2 +1,7 @@
-V	130123032803Z		01	unknown	/C=US/ST=Massachusetts/L=Boston/O=YaluAndMike/O=Org/CN=default
-V	130123032926Z		02	unknown	/C=US/ST=Massachusetts/L=Boston/O=YaluAndMike/O=Org/CN=www.facebook.com
+V	130123151438Z		01	unknown	/C=US/ST=Massachusetts/L=Boston/O=YaluAndMike/O=Org/CN=default
+V	130123161116Z		02	unknown	/C=US/ST=Massachusetts/L=Boston/O=YaluAndMike/O=Org/CN=*.google.com
+V	130123161133Z		03	unknown	/C=US/ST=Massachusetts/L=Boston/O=YaluAndMike/O=Org/CN=www.facebook.com
+V	130123163740Z		04	unknown	/C=US/ST=Massachusetts/L=Boston/O=YaluAndMike/O=Org/CN=*.yaluandmike.com
+V	130123164808Z		05	unknown	/C=US/ST=Massachusetts/L=Boston/O=YaluAndMike/O=Org/CN=*.bankofamerica.com
+V	130123164946Z		06	unknown	/C=US/ST=Massachusetts/L=Boston/O=YaluAndMike/O=Org/CN=google.com
+V	130123165403Z		07	unknown	/C=US/ST=Massachusetts/L=Boston/O=YaluAndMike/O=Org/CN=*.facebook.com
