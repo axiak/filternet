@@ -196,8 +196,8 @@ server.on('upgrade', function (request, socket, head) {
 });
 
 var sslOptions = {
-    key: fs.readFileSync('keys/server.key'),
-    cert: fs.readFileSync('keys/server.crt')
+    key: fs.readFileSync('keys/default.key.free'),
+    cert: fs.readFileSync('keys/default.crt')
 };
 
 var httpsServer = https.createServer(sslOptions, serverDefinition(https, 443, true));
