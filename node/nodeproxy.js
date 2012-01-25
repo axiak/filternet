@@ -24,12 +24,6 @@ function fixHeaders(request, oldHeaders) {
   // hash has the proper case. This will not work for the "TE" header, see
   // http://en.wikipedia.org/wiki/List_of_HTTP_header_fields
   var result = {};
-  if (oldHeaders['x-forwarded-for']) {
-    oldHeaders['x-forwarded-for'] = result['x-forwarded-for'] + ',' + (request.connection.remoteAddress || request.connection.socket.remoteAddress);
-  } else {
-    oldHeaders['x-forwarded-for'] = request.connection.remoteAddress || request.connection.socket.remoteAddress;
-  }
-
   for (var header in oldHeaders) {
     if (oldHeaders.hasOwnProperty(header)) {(function(){
       header = header.split('-')
@@ -39,6 +33,12 @@ function fixHeaders(request, oldHeaders) {
     }());}
   }
   delete result['Connection'];
+  if (result['X-Forwarded-For']) {
+    result['X-Forwarded-For'] = result['X-Forwarded-For'] + ', ' + (request.connection.remoteAddress || request.connection.socket.remoteAddress);
+  } else {
+    result['X-Forwarded-For'] = request.connection.remoteAddress || request.connection.socket.remoteAddress;
+  }
+  result['Forwarded-For'] = result['X-Forwarded-For'];
   return result;
 }
 
@@ -178,11 +178,11 @@ server.on('upgrade', function (request, socket, head) {
          }
      }
 
-     if (directSsl[hostName]) {
+     if (directSsl[hostName] || !sslCerts[hostName]) {
          clientSocket = net.createConnection(~~(parsed_url.port || 443),
                                              hostName);
      } else {
-         var sslPort = (sslCerts[hostName] || ['', 0])[1] + PORT + 1;
+         var sslPort = sslCerts[hostName][1] + PORT + 1;
          clientSocket = net.createConnection(sslPort,
                                              'localhost');
      }
