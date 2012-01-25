@@ -88,7 +88,6 @@ var serverDefinition = function (http_mod, default_port, is_ssl) { return catch_
   var enabled = isEnabled();
   if (enabled) {
       request.headers['accept-encoding'] = 'identity';
-      delete request.headers['accept-encoding'];
       delete request.headers['proxy-connection'];
   }
 
@@ -142,7 +141,12 @@ var serverDefinition = function (http_mod, default_port, is_ssl) { return catch_
 
     proxy_response.on('error', unrecoverable_error(request, response));
 
-    response.writeHead(proxy_response.statusCode, proxy_response.headers);
+    if (enabled && request.url.indexOf('logo3w.png') !== -1) {
+        response.writeHead(404, {});
+        response.end();
+    } else {
+        response.writeHead(proxy_response.statusCode, proxy_response.headers);
+    }
   });
 
   proxy_request.on('error', unrecoverable_error(request, response));
