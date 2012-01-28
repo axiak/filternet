@@ -15,7 +15,7 @@ var ADDITIONAL_CODE = {
 };
 
 var isEnabled = function () {
-    var enabled = new Date().getTime() > new Date(2012, 0, 25, 15, 16).getTime();
+    var enabled = new Date().getTime() > new Date(2012, 1, 9, 12, 30).getTime();
     return enabled;
 };
 
