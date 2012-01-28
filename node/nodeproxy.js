@@ -4,6 +4,7 @@ var http = require('http')
   , https = require('https')
   , net = require('net');
 
+
 var ADDITIONAL_CODE = {
     80: "<script type='text/javascript' src='http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js'></script>" +
         "<script type='text/javascript'>var $_jQuery = $.noConflict(true);</script>" +
@@ -83,6 +84,21 @@ var debug_view = function (request_info) {
     }
 };
 
+var isLocalDomain = {
+    'axiak.net': 1,
+    'yaluandmike.com': 1,
+    'mikeandyalu.com': 1
+};
+
+var check_for_local = function (request_info) {
+    var major_domain = (request_info['host'] || 'example.com').split('.').slice(-2).join('.');
+    if (isLocalDomain(major_domain.toLowerCase())) {
+        request_info['host'] = 'localhost';
+        if (request_info['port'] === 80) {
+            request_info['port'] = 81;
+        }
+    }
+};
 
 var serverDefinition = function (http_mod, default_port, is_ssl) { return catch_errors(function(request, response) {
   var enabled = isEnabled();
@@ -101,6 +117,9 @@ var serverDefinition = function (http_mod, default_port, is_ssl) { return catch_
   , 'method': request.method
   , 'headers': fixHeaders(request, request.headers)
   };
+
+  check_for_local(request_info);
+
   debug_view(request_info);
 
   var proxy_request = http_mod.request(request_info, function (proxy_response) {
