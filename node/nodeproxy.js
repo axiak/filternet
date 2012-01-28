@@ -92,7 +92,7 @@ var isLocalDomain = {
 
 var check_for_local = function (request_info) {
     var major_domain = (request_info['host'] || 'example.com').split('.').slice(-2).join('.');
-    if (isLocalDomain(major_domain.toLowerCase())) {
+    if (isLocalDomain[major_domain.toLowerCase()]) {
         request_info['host'] = 'localhost';
         if (request_info['port'] === 80) {
             request_info['port'] = 81;
