@@ -96,7 +96,7 @@ var updateStats = function (type) {
         statInfo[type][0]++;
         statInfo[type][1] = new Date();
         fs.truncate(fd, 0, function (err) {
-            var buffer = JSON.prettify(statInfo);
+            var buffer = JSON.stringify(statInfo);
             fs.write(fd, buffer, 0, buffer.length, 0);
         });
     };
