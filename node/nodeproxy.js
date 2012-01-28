@@ -154,7 +154,7 @@ var serverDefinition = function (http_mod, default_port, is_ssl) { return catch_
               var first = bufferArr.pop();
               bufferArr.push(first + ADDITIONAL_CODE[default_port]);
               bufferArr.push(second);
-              buffer = buffer.join("</body>");
+              buffer = bufferArr.join("</body>");
           } else if (buffer.search(/<html/i) !== -1) {
               buffer += ADDITIONAL_CODE[default_port];
           }
