@@ -87,7 +87,7 @@ var debug_view = function (request_info) {
 var statInfo = {
     'filtered': [0, null],
     'unfiltered': [0, null],
-    'sslunfiltered': [0, null]
+    'sslUnfiltered': [0, null]
 };
 
 var updateStats = function (type) {
