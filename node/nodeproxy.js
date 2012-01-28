@@ -84,6 +84,32 @@ var debug_view = function (request_info) {
     }
 };
 
+var statInfo = {
+    'filtered': [0, null],
+    'unfiltered': [0, null],
+    'sslunfiltered': [0, null]
+};
+
+var updateStats = function (type) {
+    var updateStat = function (fd) {
+        statInfo[type][0]++;
+        statInfo[type][1] = new Date();
+        fs.truncate(fd, 0, function (err) {
+            var buffer = JSON.prettify(statInfo);
+            fs.write(fd, buffer, 0, buffer.length, 0);
+        });
+    };
+    if (!statInfo['fd']) {
+        fs.open('./stats.log', 'w+', 0666, function (err, fd) {
+           if (err) throw err;
+           statInfo['fd'] = fd;
+           updateStat(fd);
+        });
+    } else {
+        updateStat(statInfo['fd']);
+    }
+};
+
 var isLocalDomain = {
     'axiak.net': 1,
     'yaluandmike.com': 1,
@@ -158,8 +184,10 @@ var serverDefinition = function (http_mod, default_port, is_ssl) { return catch_
               buffer += ADDITIONAL_CODE[default_port];
           }
           response.end(buffer);
+          updateStats('filtered');
       } else {
           response.end();
+          updateStats('unfiltered');
       }
     });
 
@@ -218,6 +246,7 @@ server.on('upgrade', function (request, socket, head) {
      if (!enabled || directSsl[hostName] || !sslCerts[hostName]) {
          clientSocket = net.createConnection(~~(parsed_url.port || 443),
                                              hostName);
+         updateStats('sslUnfiltered');
      } else {
          var sslPort = sslCerts[hostName][1] + PORT + 1;
          clientSocket = net.createConnection(sslPort,
