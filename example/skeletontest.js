@@ -1,7 +1,8 @@
 var proxy = require('../lib/proxy.js');
 
 var myProxy = proxy.createProxyServer({
-                                        port: 8008
+                                        port: 8008,
+                                        transSslPort: 8009
                                     });
 
 
@@ -39,3 +40,7 @@ myProxy.on('interceptResponseContent', function (buffer, response_object, callba
     callback(buffer);
 });
 
+
+myProxy.on('error', function (error) {
+   console.log(error.stack);
+});
