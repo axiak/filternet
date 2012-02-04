@@ -1,0 +1,12 @@
+{
+    "name": "multiproxy",
+    "version": "0.0.1",
+    "description": "A proxy library that redirects both https and http and allows injection.",
+    "author": "Mike Axiak <mike@axiak.net>",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/axiak/injectfun.git"
+    },
+    "main": "index",
+    "engines": { "node": ">= 0.4.0" }
+}

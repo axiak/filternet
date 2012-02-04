@@ -1,0 +1,66 @@
+Certificate:
+    Data:
+        Version: 3 (0x2)
+        Serial Number: 1 (0x1)
+        Signature Algorithm: md5WithRSAEncryption
+        Issuer: C=US, ST=Massachusetts, L=Boston, O=YaluAndMike, O=Org, CN=yaluandmike.com
+        Validity
+            Not Before: Jan 24 15:14:38 2012 GMT
+            Not After : Jan 23 15:14:38 2013 GMT
+        Subject: C=US, ST=Massachusetts, L=Boston, O=YaluAndMike, O=Org, CN=default
+        Subject Public Key Info:
+            Public Key Algorithm: rsaEncryption
+            RSA Public Key: (1024 bit)
+                Modulus (1024 bit):
+                    00:c5:c0:ab:12:5f:bb:69:26:e0:36:44:8b:58:bb:
+                    9a:d6:7b:35:71:5f:1a:3b:c9:a5:44:c2:72:05:6e:
+                    69:12:9c:15:ac:3e:63:76:2a:19:6d:6c:7e:e2:08:
+                    1b:cb:39:ee:70:10:1c:6e:43:95:d1:ac:73:62:d7:
+                    b9:0a:a5:aa:8c:79:34:54:6c:b2:d4:5c:23:28:c8:
+                    63:29:f3:03:e6:57:19:ae:bf:26:97:f4:bc:97:88:
+                    2e:4f:85:1e:9c:9f:0e:ad:00:35:17:79:f7:90:0f:
+                    af:cc:40:b8:30:1a:a8:52:59:e1:c4:41:fc:e6:bd:
+                    51:4f:60:f6:ec:a7:f4:40:7f
+                Exponent: 65537 (0x10001)
+        X509v3 extensions:
+            X509v3 Basic Constraints: 
+                CA:FALSE
+            Netscape Comment: 
+                OpenSSL Generated Certificate
+            X509v3 Subject Key Identifier: 
+                B2:C8:1C:3D:48:FD:B2:64:06:2A:EC:D3:D7:C2:4B:A8:7E:A8:3F:7B
+            X509v3 Authority Key Identifier: 
+                keyid:FC:90:77:9B:7A:51:29:78:A7:23:23:83:77:65:3A:0E:E9:EC:2F:66
+                DirName:/C=US/ST=Massachusetts/L=Boston/O=YaluAndMike/O=Org/CN=yaluandmike.com
+                serial:C8:86:E0:8B:8B:8A:12:71
+
+    Signature Algorithm: md5WithRSAEncryption
+        19:94:b1:20:5d:1c:21:36:d1:94:e8:db:a6:c4:a2:9b:8a:f1:
+        11:f0:ea:0f:0b:8a:0f:bc:cf:f1:9f:18:ba:00:67:7e:28:32:
+        d1:9e:9a:a7:8c:9f:cc:ce:f2:e6:8d:38:3d:78:c3:7c:c2:f1:
+        9e:0b:59:c4:db:af:36:a9:f0:4c:8b:1e:da:3c:c0:01:6f:a6:
+        d2:3c:37:cd:62:80:8f:45:ae:37:20:35:cb:fb:56:78:04:e3:
+        5c:f4:89:f9:16:d5:2d:3e:bc:83:33:7b:71:38:f4:01:2e:1a:
+        f2:0f:e4:e9:8a:d3:40:dc:dd:5b:a8:42:4a:f3:cf:5e:eb:ee:
+        55:40
+-----BEGIN CERTIFICATE-----
+MIIDXTCCAsagAwIBAgIBATANBgkqhkiG9w0BAQQFADB0MQswCQYDVQQGEwJVUzEW
+MBQGA1UECBMNTWFzc2FjaHVzZXR0czEPMA0GA1UEBxMGQm9zdG9uMRQwEgYDVQQK
+EwtZYWx1QW5kTWlrZTEMMAoGA1UEChMDT3JnMRgwFgYDVQQDEw95YWx1YW5kbWlr
+ZS5jb20wHhcNMTIwMTI0MTUxNDM4WhcNMTMwMTIzMTUxNDM4WjBsMQswCQYDVQQG
+EwJVUzEWMBQGA1UECBMNTWFzc2FjaHVzZXR0czEPMA0GA1UEBxMGQm9zdG9uMRQw
+EgYDVQQKEwtZYWx1QW5kTWlrZTEMMAoGA1UEChMDT3JnMRAwDgYDVQQDEwdkZWZh
+dWx0MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDFwKsSX7tpJuA2RItYu5rW
+ezVxXxo7yaVEwnIFbmkSnBWsPmN2KhltbH7iCBvLOe5wEBxuQ5XRrHNi17kKpaqM
+eTRUbLLUXCMoyGMp8wPmVxmuvyaX9LyXiC5PhR6cnw6tADUXefeQD6/MQLgwGqhS
+WeHEQfzmvVFPYPbsp/RAfwIDAQABo4IBBTCCAQEwCQYDVR0TBAIwADAsBglghkgB
+hvhCAQ0EHxYdT3BlblNTTCBHZW5lcmF0ZWQgQ2VydGlmaWNhdGUwHQYDVR0OBBYE
+FLLIHD1I/bJkBirs09fCS6h+qD97MIGmBgNVHSMEgZ4wgZuAFPyQd5t6USl4pyMj
+g3dlOg7p7C9moXikdjB0MQswCQYDVQQGEwJVUzEWMBQGA1UECBMNTWFzc2FjaHVz
+ZXR0czEPMA0GA1UEBxMGQm9zdG9uMRQwEgYDVQQKEwtZYWx1QW5kTWlrZTEMMAoG
+A1UEChMDT3JnMRgwFgYDVQQDEw95YWx1YW5kbWlrZS5jb22CCQDIhuCLi4oScTAN
+BgkqhkiG9w0BAQQFAAOBgQAZlLEgXRwhNtGU6NumxKKbivER8OoPC4oPvM/xnxi6
+AGd+KDLRnpqnjJ/MzvLmjTg9eMN8wvGeC1nE2682qfBMix7aPMABb6bSPDfNYoCP
+Ra43IDXL+1Z4BONc9In5FtUtPryDM3txOPQBLhryD+TpitNA3N1bqEJK889e6+5V
+QA==
+-----END CERTIFICATE-----
