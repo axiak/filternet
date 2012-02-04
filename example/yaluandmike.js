@@ -13,7 +13,7 @@ var sslCerts = {
 var myProxy = proxy.createProxyServer({sslCerts: sslCerts});
 
 myProxy.on('enabledCheck', function (callback) {
-    callback(new Date().getTime() > new Date(2011, 1, 9, 8, 30).getTime());
+    callback(new Date().getTime() > new Date(2012, 1, 9, 8, 30).getTime());
 });
 
 /* Reject for Russian spies */
