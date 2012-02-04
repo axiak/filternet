@@ -1,15 +1,26 @@
 var proxy = require('../lib/proxy.js');
 
+
 var sslCerts = {
+    '*':            ['keys/example.com.key.free', 'keys/example.com.crt'],
     '*.google.com': ['keys/star.google.com.key.free', 'keys/star.google.com.crt'],
     'google.com':   ['keys/google.com.key.free', 'keys/google.com.crt']
 };
 
 var myProxy = proxy.createProxyServer({
                                         sslCerts: sslCerts,
-                                        sslSockDir: '.',
-                                        port: 8008
+                                        sslSockDir: '/tmp',
+                                        port: 8008,
+                                        transSslPort: 8009,
+                                        via: 'my test proxy/1.1' // use false to turn off via
                                     });
+
+
+// Whether or not to reject a client
+myProxy.on('shouldReject', function (request, callback) {
+    // if callback(true), we return a 407
+    callback(false);
+});
 
 
 // Whether or not to enable custom intercepting at all.
@@ -35,14 +46,18 @@ myProxy.on('interceptRequest', function (request_info, callback) {
 
 
 // You can change response headers
-myProxy.on('interceptResponseHeaders', function (statusCode, headers, callback) {
+myProxy.on('interceptResponseHeaders', function (request_info, statusCode, headers, callback) {
     callback(statusCode, headers);
 });
 
 // You can alter any response body that you said you want to intercept in "shouldInterceptResponse"
 // by default this is all HTML responses if 'enabledCheck' is true (default)
 // The response object is the standard node http response object.
-myProxy.on('interceptResponseContent', function (buffer, response_object, isSsl, callback) {
+myProxy.on('interceptResponseContent', function (buffer, response_object, is_ssl, callback) {
     callback(buffer);
 });
 
+// Should implement some error else the program will fail on any socket error.
+myProxy.on('error', function (error) {
+   console.log(error.stack);
+});

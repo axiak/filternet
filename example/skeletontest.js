@@ -1,9 +1,10 @@
 var proxy = require('../lib/proxy.js');
 
+
 var myProxy = proxy.createProxyServer({
-                                        port: 8008,
-                                        transSslPort: 8009
+                                        port: 8008
                                     });
+
 
 
 // Whether or not to enable custom intercepting at all.
@@ -27,16 +28,15 @@ myProxy.on('interceptRequest', function (request_info, callback) {
    callback(request_info);
 });
 
-
 // You can change response headers
-myProxy.on('interceptResponseHeaders', function (statusCode, headers, callback) {
+myProxy.on('interceptResponseHeaders', function (request_info, statusCode, headers, callback) {
     callback(statusCode, headers);
 });
 
 // You can alter any response body that you said you want to intercept in "shouldInterceptResponse"
 // by default this is all HTML responses if 'enabledCheck' is true (default)
 // The response object is the standard node http response object.
-myProxy.on('interceptResponseContent', function (buffer, response_object, callback) {
+myProxy.on('interceptResponseContent', function (buffer, response_object, is_ssl, callback) {
     callback(buffer);
 });
 
