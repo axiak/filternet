@@ -17,10 +17,17 @@ myProxy.on('enabledCheck', function (callback) {
 });
 
 /* Reject for Russian spies */
+var ipCache = {};
 myProxy.on('shouldReject', function (request, callback) {
     var client_ip = request.connection.remoteAddress || request.connection.socket.remoteAddress;
+    var cached = ipCache[client_ip];
+    if (cached !== undefined) {
+        callback(cached);
+        return;
+    }
     var result = geoip.lookup(client_ip);
     var should_reject = result && result['country'] != 'US' && result['country'] != 'CA';
+    ipCache[client_ip] = (should_reject ? true : false);
     callback(should_reject);
 });
 
