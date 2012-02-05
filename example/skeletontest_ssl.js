@@ -10,8 +10,8 @@ var sslCerts = {
 var myProxy = proxy.createProxyServer({
                                         sslCerts: sslCerts,
                                         sslSockDir: '/tmp',
-                                        port: 8008,
-                                        transSslPort: 8009,
+                                        port: 8080,
+                                        transSslPort: 8081,
                                         via: 'my test proxy/1.1' // use false to turn off via
                                     });
 
@@ -53,7 +53,8 @@ myProxy.on('interceptResponseHeaders', function (request_info, statusCode, heade
 // You can alter any response body that you said you want to intercept in "shouldInterceptResponse"
 // by default this is all HTML responses if 'enabledCheck' is true (default)
 // The response object is the standard node http response object.
-myProxy.on('interceptResponseContent', function (buffer, response_object, is_ssl, callback) {
+myProxy.on('interceptResponseContent', function (buffer, response_object, is_ssl, charset, callback) {
+    console.log(charset);
     callback(buffer);
 });
 
