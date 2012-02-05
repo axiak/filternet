@@ -15,7 +15,7 @@ default_ca  = CA_default        # The default ca section
 ####################################################################
 [ CA_default ]
 
-dir     = ./MikeCA    # Where everything is kept
+dir     = ./TestCA    # Where everything is kept
 certs       = $dir/ca.db.certs  # Where the issued certs are kept
 #crl_dir        = $dir/crl  # Where the issued crl are kept
 database    = $dir/ca.db.index  # database index file.
@@ -192,7 +192,7 @@ localityName            = Locality Name (eg, city)
 localityName_default        = Boston
 
 0.organizationName      = Organization Name (eg, company)
-0.organizationName_default  = YaluAndMike
+0.organizationName_default  = TestCA
 
 1.organizationName      = Second Organization Name (eg, company)
 1.organizationName_default  = Org
