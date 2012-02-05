@@ -2,9 +2,9 @@ var proxy = require('../lib/proxy.js');
 
 
 var sslCerts = {
-    '*':            ['keys/example.com.key.free', 'keys/example.com.crt'],
-    '*.google.com': ['keys/star.google.com.key.free', 'keys/star.google.com.crt'],
-    'google.com':   ['keys/google.com.key.free', 'keys/google.com.crt']
+   // '*':            ['keys/example.com.key', 'keys/example.com.crt'],
+    '*.google.com': ['keys/star.google.com.key', 'keys/star.google.com.crt'],
+    'google.com':   ['keys/google.com.key', 'keys/google.com.crt']
 };
 
 var myProxy = proxy.createProxyServer({

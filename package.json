@@ -2,14 +2,17 @@
     "name": "filternet",
     "version": "0.0.1",
     "description": "A proxy library that provides easy hooks to manipulate http and https traffic consistently.",
-    "author": "Mike Axiak <mike@axiak.net>",
+    "author": { "name": "Mike Axiak", "email": "mike@axiak.net" },
     "repository": {
         "type": "git",
         "url": "https://github.com/axiak/filternet.git"
     },
+    "homepage": "https://github.com/axiak/filternet",
+    "bugs": "https://github.com/axiak/filternet/issues",
     "dependencies": {
         "bufferjs": ">= 1.0.0"
     },
     "main": "index",
+    "license": "BSD",
     "engines": { "node": ">= 0.6.0" }
 }
