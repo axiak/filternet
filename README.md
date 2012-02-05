@@ -17,7 +17,7 @@ var filternet = require('filternet');
 
 var myProxy = filternet.createProxyServer();
 
-myProxy.on("interceptResponseContent", function (buffer, response_object, is_ssl, charset, callback) {
+myProxy.on("interceptResponseContent", function (buffer, responseObject, isSsl, charset, callback) {
   var content = buffer.toString('utf8');
   var css = "<"+"link rel='stylesheet' href='http://axiak.github.com/filternet/blink.css'>";
   callback(content.replace(/<\/head>/i, css + "</head>"));
@@ -40,7 +40,7 @@ var myProxy = filternet.createProxyServer({
    transSslPort: 8129 // enable transparent ssl proxy
 });
 
-myProxy.on("interceptResponseContent", function (buffer, response_object, is_ssl, charset, callback) {
+myProxy.on("interceptResponseContent", function (buffer, responseObject, isSsl, charset, callback) {
    console.log(buffer.toString('utf8'));
    callback(buffer);
 });
@@ -56,7 +56,7 @@ The main function available is <tt>createProxyServer(opts)</tt> where the option
 
 - port - The port to listen on. Default: 8128
 - hostname - The hostname to listen on. Default: server will accept any
-- via - Either the name to give to the VIA header, or false to squelch the VIA header. Default: filternet/0.0.1
+- via - Either the name to give to the VIA header, or false to squelch the VIA header. Default: filternet/0.0.2
 - enableCompression - Whether or not to enable HTTP compression. If false, the accept-encoding header will tell the remote server to not compress. Default: true
 - recompress - If the response from the server was compressed, this will determine if the proxy will recompress the decompressed content for the client. Default: equal to <tt>enableCompression</tt>
 - sslCerts - The mapping of host description to ssl keys/certificates (see SSL Certificates). Default: {}
@@ -71,25 +71,25 @@ This gets called first on every http request or intercepted https request.
 If you call <tt>callback(true)</tt>, the proxy server will return a 407 response and complete.
 
 
-### Event: enabledCheck <tt>function (callback){}</tt>
+### Event: shouldEnableInterception <tt>function (callback){}</tt>
 
 This is used to disable intercepting. If you run callback(false), the proxy server will run as a normal proxy server would. callback(true) will enable your other listeners.
 
 The default behavior is callback(true)
 
-### Event: interceptRequest <tt>function (request_options, callback)</tt>
+### Event: interceptRequest <tt>function (requestOptions, callback)</tt>
 
-request_options is a map of data to be sent to http.request. callback expects request_options to continue the request.
+requestOptions is a map of data to be sent to http.request. callback expects requestOptions to continue the request.
 
-The default behavior is callback(request_options);
+The default behavior is callback(requestOptions);
 
-### Event: interceptResponseHeaders: <tt>function (request_info, response_status_code, response_headers, callback)</tt>
+### Event: interceptResponseHeaders: <tt>function (requestInfo, responseStatusCode, responseHeaders, callback)</tt>
 
-callback expects (response_status_code, response_headers). You can use this method if you want to manipulate the response headers before they get sent.
+callback expects (responseStatusCode, responseHeaders). You can use this method if you want to manipulate the response headers before they get sent.
 
-The default behavior is callback(response_status_code, response_headers);
+The default behavior is callback(responseStatusCode, responseHeaders);
 
-### Event: shouldInterceptResponse <tt>function (response, callback)</tt>
+### Event: shouldInterceptResponseContent <tt>function (response, callback)</tt>
 
 Given the response from the remote server, this listener enabled you to decide if the interception should happen or not. Run callback(true) if you intend on intercepting the response content.
 
@@ -97,21 +97,21 @@ The default behavior is callback(isHtml), where isHtml is true if the content-ty
 
 (The use of the method prevents the proxy server from having to buffer images, etc.)
 
-### Event: interceptResponseContent <tt>function (buffer, proxy_response, is_ssl, charset, callback)</tt>
+### Event: interceptResponseContent <tt>function (buffer, remoteResponse, isSsl, charset, callback)</tt>
 
 callback expects the content buffer or string to send to the client.
 
-is_ssl is true if this interception was performed on an https request.
+isSsl is true if this interception was performed on an https request.
 
-charset is a convenience string which is either the charset from the Content-Type header, or null if none was defined. 
+charset is a convenience string which is either the charset from the Content-Type header, or null if none was defined.
 
 Generally, if charset is not null it's safer to run buffer.toString('utf8') to get a string. Otherwise you're probably dealing with binary data.
 
 The default behavior is callback(buffer);
 
-### Event: error <tt>function (error)</tt>
+### Event: error <tt>function (error, [errorSourceString], [requestInfo])</tt>
 
-Called on any error that is not a clientError
+Called on any error that is not a clientError. If available an error source string and the requestInfo object will be provided.
 
 If not defined errors actually break the proxy server.
 

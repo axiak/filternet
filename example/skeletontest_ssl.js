@@ -24,36 +24,36 @@ myProxy.on('shouldReject', function (request, callback) {
 
 
 // Whether or not to enable custom intercepting at all.
-myProxy.on('enabledCheck', function (callback) {
+myProxy.on('shouldEnableInterception', function (callback) {
     callback(true);
 });
 
 // Whether or not we should intercept and buffer the proxy response
 // The default is to buffer all HTML responses.
-myProxy.on('shouldInterceptResponse', function (proxy_response, callback) {
-    var isHtml = (proxy_response.headers['content-type'] &&
-                  proxy_response.headers['content-type'].toLowerCase().indexOf("html") != -1);
+myProxy.on('shouldInterceptResponseContent', function (proxyResponse, callback) {
+    var isHtml = (proxyResponse.headers['content-type'] &&
+                  proxyResponse.headers['content-type'].toLowerCase().indexOf("html") != -1);
     callback(isHtml);
 });
 
 // You can rewrite the request as it's being sent to the remote server.
 // (just headers)
-myProxy.on('interceptRequest', function (request_info, callback) {
-   // request_info is the same as the arguments to http.request
-   console.log(request_info['host'], request_info['path']);
-   callback(request_info);
+myProxy.on('interceptRequest', function (requestInfo, callback) {
+   // requestInfo is the same as the argument object passed to http.request
+   console.log(requestInfo.host, requestInfo.path);
+   callback(requestInfo);
 });
 
 
 // You can change response headers
-myProxy.on('interceptResponseHeaders', function (request_info, statusCode, headers, callback) {
+myProxy.on('interceptResponseHeaders', function (requestInfo, statusCode, headers, callback) {
     callback(statusCode, headers);
 });
 
 // You can alter any response body that you said you want to intercept in "shouldInterceptResponse"
 // by default this is all HTML responses if 'enabledCheck' is true (default)
 // The response object is the standard node http response object.
-myProxy.on('interceptResponseContent', function (buffer, response_object, is_ssl, charset, callback) {
+myProxy.on('interceptResponseContent', function (buffer, response, isSsl, charset, callback) {
     callback(buffer);
 });
 

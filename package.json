@@ -1,6 +1,6 @@
 {
     "name": "filternet",
-    "version": "0.0.1",
+    "version": "0.0.2",
     "description": "A proxy library that provides easy hooks to manipulate http and https traffic consistently.",
     "author": { "name": "Mike Axiak", "email": "mike@axiak.net" },
     "repository": {
