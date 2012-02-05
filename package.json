@@ -5,8 +5,11 @@
     "author": "Mike Axiak <mike@axiak.net>",
     "repository": {
         "type": "git",
-        "url": "https://github.com/axiak/injectfun.git"
+        "url": "https://github.com/axiak/filternet.git"
+    },
+    "dependencies": {
+        "bufferjs": ">= 1.0.0"
     },
     "main": "index",
-    "engines": { "node": ">= 0.4.0" }
+    "engines": { "node": ">= 0.6.0" }
 }
