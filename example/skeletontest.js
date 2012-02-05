@@ -2,7 +2,7 @@ var proxy = require('../lib/proxy.js');
 
 
 var myProxy = proxy.createProxyServer({
-                                        port: 8008
+                                        port: 9999
                                     });
 
 
