@@ -1,7 +1,7 @@
 {
-    "name": "multiproxy",
+    "name": "filternet",
     "version": "0.0.1",
-    "description": "A proxy library that redirects both https and http and allows injection.",
+    "description": "A proxy library that provides easy hooks to manipulate http and https traffic consistently.",
     "author": "Mike Axiak <mike@axiak.net>",
     "repository": {
         "type": "git",

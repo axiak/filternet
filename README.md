@@ -56,7 +56,7 @@ The main function available is <tt>createProxyServer(opts)</tt> where the option
 
 - port - The port to listen on. Default: 8128
 - hostname - The hostname to listen on. Default: server will accept any
-- via - Either the name to give to the VIA header, or false to squelch the VIA header. Default: nodeproxy/0.0.1
+- via - Either the name to give to the VIA header, or false to squelch the VIA header. Default: filternet/0.0.1
 - enableCompression - Whether or not to enable HTTP compression. If false, the accept-encoding header will tell the remote server to not compress. Default: true
 - recompress - If the response from the server was compressed, this will determine if the proxy will recompress the decompressed content for the client. Default: equal to <tt>enableCompression</tt>
 - sslCerts - The mapping of host description to ssl keys/certificates (see SSL Certificates). Default: {}

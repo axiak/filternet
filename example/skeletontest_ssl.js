@@ -54,7 +54,6 @@ myProxy.on('interceptResponseHeaders', function (request_info, statusCode, heade
 // by default this is all HTML responses if 'enabledCheck' is true (default)
 // The response object is the standard node http response object.
 myProxy.on('interceptResponseContent', function (buffer, response_object, is_ssl, charset, callback) {
-    console.log(charset);
     callback(buffer);
 });
 
