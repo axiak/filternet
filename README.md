@@ -121,6 +121,19 @@ Called on any clientError
 
 If not defined errors actually break the proxy server.
 
+## Compression
+
+HTTP defines compression with the Accept-Encoding header. Intercepting and analysing responses are somewhat incompatible with compression, so this library tries to get around this limitation in two ways:
+
+1. Disable compression entirely
+2. On-the-fly decompression and recompression
+
+If <tt>enableCompression</tt> is false, then the client's Accept-Encoding header will be rewritten to 'identity' if interception is enabled (see the enabledCheck event). Note that you can't turn off compression for _just_ HTML, as we don't know until the response from the remote server whether or not the document is HTML.
+
+If <tt>enabledCompression</tt> is true, then the Accept-Encoding is mangled to ensure it contains nothing more than 'gzip','deflate', or 'identity'. Then the remote response headers will indicate if the response is compressed. The response is then decompressed before they are sent to any listeners.
+
+If <tt>recompress</tt> is enabled, then the potentially manipulated response content is then compressed again, using whatever method (gzip or deflate) was used to decompress from the server. Note that the <tt>recompress</tt> flag determines if the Content-Encoding header is mangled before it's sent to the client.
+
 ## HTTPS
 
 ### SSL Certificates
