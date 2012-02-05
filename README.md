@@ -67,7 +67,7 @@ The main function available is <tt>createProxyServer(opts)</tt> where the option
 
 ### Event: shouldReject <tt>function (request, callback){}</tt>
 
-This gets called first on every intercepted https or http request.
+This gets called first on every http request or intercepted https request.
 If you call <tt>callback(true)</tt>, the proxy server will return a 407 response and complete.
 
 
