@@ -173,6 +173,10 @@ Transparent HTTPS proxy gets a little bit tricky. When the client sends a TLS ha
 
 Note that not every HTTPS client supports SNI: notably absent from the list of support is any IE on Windows XP (see http://en.wikipedia.org/wiki/Server_Name_Indication for more information). 
 
+## Motivation
+
+I created and used this module to alter my now fiancée's Google doodle to eventually lead to a proposal. She said yes, so this project was a success.
+
 ## Bugs
 
 I'm sure there are some at the moment. If you encounter any, or if you have any improvements, feel free to file an issue or send a merge request my way.
