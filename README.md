@@ -1,3 +1,4 @@
+[![build status](https://secure.travis-ci.org/axiak/filternet.png)](http://travis-ci.org/axiak/filternet)
 # filternet - A simple way to filter http in node.js
 
 filternet implements a feature-packed proxy server that allows the coder to intercept and manipulate requests and responses in a consistent manner. filternet is designed to behave consistently with:
