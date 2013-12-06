@@ -176,7 +176,7 @@ Note that not every HTTPS client supports SNI: notably absent from the list of s
 
 ## Motivation
 
-I created and used this module to alter my now fiancée's Google doodle to eventually lead to a proposal. She said yes, so this project was a success.
+I created and used this module to alter my now wife's Google doodle to eventually lead to a proposal. She said yes, so this project was a success.
 
 ## Bugs
 
