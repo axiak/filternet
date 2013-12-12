@@ -14,5 +14,13 @@
     },
     "main": "index",
     "license": "BSD",
-    "engines": { "node": ">= 0.6.0" }
+    "engines": { "node": ">= 0.6.0" },
+    "keywords": [
+        "proxy",
+        "http",
+        "https",
+        "mitm",
+        "intercept",
+        "transparent"
+  ]
 }
